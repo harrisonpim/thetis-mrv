@@ -17,6 +17,6 @@ while True:
             print(f"Downloading data for {year}...")
             with open(file_path, "wb") as f:
                 f.write(response.content)
-        else: 
+        else:
             break
     year += 1
