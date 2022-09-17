@@ -89,7 +89,9 @@ def parse_technical_efficiency(
         try:
             label, string_value = technical_efficiency.split(" ", 1)
             value = float(
-                string_value.replace("(", "").replace("gCO₂/t·nm", "").replace(")", "")
+                string_value.replace("(", "")
+                .replace("gCO₂/t·nm", "")
+                .replace(")", "")
             )
             return label, value
         except ValueError as _:
@@ -102,11 +104,11 @@ def row_to_entry(row: pd.Series) -> Entry:
         technicalEfficiencyValue,
     ) = parse_technical_efficiency(row["Technical efficiency"])
     try:
-        docIssueDate = datetime.strptime(row["DoC issue date"], "%d/%m/%Y"),
+        docIssueDate = (datetime.strptime(row["DoC issue date"], "%d/%m/%Y"),)
     except ValueError as _:
         docIssueDate = None
     try:
-        docExpiryDate = datetime.strptime(row["DoC expiry date"], "%d/%m/%Y"),
+        docExpiryDate = (datetime.strptime(row["DoC expiry date"], "%d/%m/%Y"),)
     except ValueError as _:
         docExpiryDate = None
     return Entry(

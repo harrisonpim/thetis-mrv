@@ -35,9 +35,9 @@ logger.info("Downloaded all data files from source")
 
 logger.info("Opening session with database")
 
-user = os.environ['POSTGRES_USER']
-password = os.environ['POSTGRES_PASSWORD']
-db = os.environ['POSTGRES_DB']
+user = os.environ["POSTGRES_USER"]
+password = os.environ["POSTGRES_PASSWORD"]
+db = os.environ["POSTGRES_DB"]
 engine = create_engine(f"postgresql://{user}:{password}@postgres:5432/{db}")
 
 SQLModel.metadata.create_all(engine)
