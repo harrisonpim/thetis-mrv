@@ -62,3 +62,15 @@ services:
       - type: bind
         source: ./data/postgres
         target: /var/lib/postgresql/data/
+
+  api:
+    depends_on:
+      - postgres
+    build: api/
+    env_file: .env
+    ports:
+      - 80:80
+    volumes:
+      - type: bind
+        source: ./src
+        target: /app/src
