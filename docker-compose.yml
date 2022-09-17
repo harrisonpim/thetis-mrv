@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  jupyter:
+    build: 
+      dockerfile: jupyter/Dockerfile
+      context: .
+    ports:
+      - 8888:8888
+    volumes:
+      - type: bind
+        source: ./jupyter/notebooks
+        target: /home/jovyan/
+      - type: bind
+        source: ./data
+        target: /home/jovyan/data
+      - type: bind
+        source: ./src
+        target: /home/jovyan/src
+    env_file:
+      - .env
+      - ./jupyter/.env
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+
+  format-python:
+    image: python:3.8-slim
+    volumes: 
+      - type: bind
+        source: ./
+        target: /repo
+    working_dir: /repo
+    command: sh tasks/format.sh
