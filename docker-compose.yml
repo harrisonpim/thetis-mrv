@@ -31,3 +31,16 @@ services:
         target: /repo
     working_dir: /repo
     command: sh tasks/format.sh
+
+  get-data:
+    build:
+      dockerfile: tasks/get_data/Dockerfile
+      context: .
+    volumes:
+      - type: bind
+        source: ./data
+        target: /data
+      - type: bind
+        source: ./tasks
+        target: /tasks
+    command: python /tasks/get_data/main.py
