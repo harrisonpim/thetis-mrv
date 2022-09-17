@@ -2,6 +2,8 @@ version: "3.8"
 
 services:
   jupyter:
+    depends_on:
+      - postgres
     build: 
       dockerfile: jupyter/Dockerfile
       context: .
@@ -22,8 +24,6 @@ services:
       - ./jupyter/.env
     environment:
       - JUPYTER_ENABLE_LAB=yes
-    depends_on:
-      - postgres
 
   format-python:
     image: python:3.8-slim
@@ -35,9 +35,12 @@ services:
     command: sh tasks/format.sh
 
   get-data:
+    depends_on:
+      - postgres
     build:
       dockerfile: tasks/get_data/Dockerfile
       context: .
+    env_file: .env
     volumes:
       - type: bind
         source: ./data
@@ -45,6 +48,9 @@ services:
       - type: bind
         source: ./tasks
         target: /tasks
+      - type: bind
+        source: ./src
+        target: /tasks/get_data/src
     command: python /tasks/get_data/main.py
 
   postgres:

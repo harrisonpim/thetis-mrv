@@ -19,72 +19,81 @@ class Entry(SQLModel, table=True):
     portOfRegistry: Optional[str]
     shipHomePort: Optional[str]
     iceClassPolarCode: Optional[str]
-    docIssueDate: datetime
-    docExpiryDate: datetime
-    verifierNumber: str
-    verifierName: str
-    verifierNab: str
-    verifierAddress: str
-    verifierCity: str
-    verifierAccreditationNumber: str
-    verifierCountry: str
-    monitoringMethodA: bool
-    monitoringMethodB: bool
-    monitoringMethodC: bool
-    monitoringMethodD: bool
-    totalFuelConsumption: float
-    onLadenFuelConsumption: float
-    totalCo2Emissions: float
-    betweenMSJurisdictionPortsCo2Emissions: float
-    fromMSJurisdictionPortsCo2Emissions: float
-    toMSJurisdictionPortsCo2Emissions: float
-    atBerthMSJurisdictionPortsCo2Emissions: float
-    passengerCo2Emissions: float
-    freightCo2Emissions: float
-    onLadenCo2Emissions: float
-    annualTotalTimeSpentAtSeaHours: float
-    fuelConsumptionPerDistance: float
-    fuelConsumptionPerTransportWorkMass: float
-    fuelConsumptionPerTransportWorkVolume: float
-    fuelConsumptionPerTransportWorkDwt: float
-    fuelConsumptionPerTransportWorkPax: float
-    fuelConsumptionPerTransportWorkFreight: float
-    Co2EmissionsPerDistance: float
-    Co2EmissionsPerTransportWorkMass: float
-    Co2EmissionsPerTransportWorkVolume: float
-    Co2EmissionsPerTransportWorkDwt: float
-    Co2EmissionsPerTransportWorkPax: float
-    Co2EmissionsPerTransportWorkFreight: float
-    distanceTravelledThroughIce: float
-    totalTimeSpentAtSeaHours: float
-    totalTimeSpentAtSeaThroughIceHours: float
-    ladenFuelConsumptionPerDistance: float
-    ladenFuelConsumptionPerTransportWorkMass: float
-    ladenFuelConsumptionPerTransportWorkVolume: float
-    ladenFuelConsumptionPerTransportWorkDwt: float
-    ladenFuelConsumptionPerTransportWorkPax: float
-    ladenFuelConsumptionPerTransportWorkFreight: float
-    ladenCo2EmissionsPerDistance: float
-    ladenCo2EmissionsPerTransportWorkMass: float
-    ladenCo2EmissionsPerTransportWorkVolume: float
-    ladenCo2EmissionsPerTransportWorkDwt: float
-    ladenCo2EmissionsPerTransportWorkPax: float
-    ladenCo2EmissionsPerTransportWorkFreight: float
-    voluntaryReportingAdditionalInformation: str
-    voluntaryReportingAverageDensityOfTheCargoTransported: float
+    docIssueDate: Optional[datetime]
+    docExpiryDate: Optional[datetime]
+    verifierNumber: Optional[str]
+    verifierName: Optional[str]
+    verifierNab: Optional[str]
+    verifierAddress: Optional[str]
+    verifierCity: Optional[str]
+    verifierAccreditationNumber: Optional[str]
+    verifierCountry: Optional[str]
+    monitoringMethodA: Optional[bool]
+    monitoringMethodB: Optional[bool]
+    monitoringMethodC: Optional[bool]
+    monitoringMethodD: Optional[bool]
+    totalFuelConsumption: Optional[float]
+    onLadenFuelConsumption: Optional[float]
+    totalCo2Emissions: Optional[float]
+    betweenMSJurisdictionPortsCo2Emissions: Optional[float]
+    fromMSJurisdictionPortsCo2Emissions: Optional[float]
+    toMSJurisdictionPortsCo2Emissions: Optional[float]
+    atBerthMSJurisdictionPortsCo2Emissions: Optional[float]
+    passengerCo2Emissions: Optional[float]
+    freightCo2Emissions: Optional[float]
+    onLadenCo2Emissions: Optional[float]
+    annualTotalTimeSpentAtSeaHours: Optional[float]
+    fuelConsumptionPerDistance: Optional[float]
+    fuelConsumptionPerTransportWorkMass: Optional[float]
+    fuelConsumptionPerTransportWorkVolume: Optional[float]
+    fuelConsumptionPerTransportWorkDwt: Optional[float]
+    fuelConsumptionPerTransportWorkPax: Optional[float]
+    fuelConsumptionPerTransportWorkFreight: Optional[float]
+    Co2EmissionsPerDistance: Optional[float]
+    Co2EmissionsPerTransportWorkMass: Optional[float]
+    Co2EmissionsPerTransportWorkVolume: Optional[float]
+    Co2EmissionsPerTransportWorkDwt: Optional[float]
+    Co2EmissionsPerTransportWorkPax: Optional[float]
+    Co2EmissionsPerTransportWorkFreight: Optional[float]
+    distanceTravelledThroughIce: Optional[float]
+    totalTimeSpentAtSeaHours: Optional[float]
+    totalTimeSpentAtSeaThroughIceHours: Optional[float]
+    ladenFuelConsumptionPerDistance: Optional[float]
+    ladenFuelConsumptionPerTransportWorkMass: Optional[float]
+    ladenFuelConsumptionPerTransportWorkVolume: Optional[float]
+    ladenFuelConsumptionPerTransportWorkDwt: Optional[float]
+    ladenFuelConsumptionPerTransportWorkPax: Optional[float]
+    ladenFuelConsumptionPerTransportWorkFreight: Optional[float]
+    ladenCo2EmissionsPerDistance: Optional[float]
+    ladenCo2EmissionsPerTransportWorkMass: Optional[float]
+    ladenCo2EmissionsPerTransportWorkVolume: Optional[float]
+    ladenCo2EmissionsPerTransportWorkDwt: Optional[float]
+    ladenCo2EmissionsPerTransportWorkPax: Optional[float]
+    ladenCo2EmissionsPerTransportWorkFreight: Optional[float]
+    voluntaryReportingAdditionalInformation: Optional[str]
+    voluntaryReportingAverageDensityOfTheCargoTransported: Optional[float]
 
 
 def parse_technical_efficiency(
     technical_efficiency,
 ) -> Tuple[Optional[str], Optional[float]]:
-    if (type(technical_efficiency) != str) | (
-        technical_efficiency == "Not Applicable"
-    ):
+    if type(technical_efficiency) != str:
+        return None, None
+    elif technical_efficiency.startswith("Not Applicable"):
+        return None, None
+    elif technical_efficiency == "":
+        return None, None
+    elif technical_efficiency.startswith("0"):
         return None, None
     else:
-        label, string_value = technical_efficiency.split(" ", 1)
-        value = float(string_value[1:-11])
-        return label, value
+        try:
+            label, string_value = technical_efficiency.split(" ", 1)
+            value = float(
+                string_value.replace("(", "").replace("gCO₂/t·nm", "").replace(")", "")
+            )
+            return label, value
+        except ValueError as _:
+            return None, None
 
 
 def row_to_entry(row: pd.Series) -> Entry:
@@ -92,6 +101,14 @@ def row_to_entry(row: pd.Series) -> Entry:
         technicalEfficiencyLabel,
         technicalEfficiencyValue,
     ) = parse_technical_efficiency(row["Technical efficiency"])
+    try:
+        docIssueDate = datetime.strptime(row["DoC issue date"], "%d/%m/%Y"),
+    except ValueError as _:
+        docIssueDate = None
+    try:
+        docExpiryDate = datetime.strptime(row["DoC expiry date"], "%d/%m/%Y"),
+    except ValueError as _:
+        docExpiryDate = None
     return Entry(
         shipImo=int(row["IMO Number"]),
         shipName=row["Name"],
@@ -102,8 +119,8 @@ def row_to_entry(row: pd.Series) -> Entry:
         portOfRegistry=row["Port of Registry"],
         shipHomePort=row["Home Port"],
         iceClassPolarCode=row["Ice Class"],
-        docIssueDate=datetime.strptime(row["DoC issue date"], "%d/%m/%Y"),
-        docExpiryDate=datetime.strptime(row["DoC expiry date"], "%d/%m/%Y"),
+        docIssueDate=docIssueDate,
+        docExpiryDate=docExpiryDate,
         verifierNumber=row["Verifier Number"],
         verifierName=row["Verifier Name"],
         verifierNab=row["Verifier NAB"],
