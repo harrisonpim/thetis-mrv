@@ -1,17 +1,10 @@
-import orjson
 import os
-from fastapi import FastAPI, HTTPException, responses
+from fastapi import FastAPI, HTTPException, Query, Request
+from responses import ORJSONResponse, EntriesResponse
 from src import get_db_engine, Entry, Ship
 
 from sqlmodel import Session, select
-from typing import List, Any
-
-
-class ORJSONResponse(responses.JSONResponse):
-    media_type = "application/json"
-
-    def render(self, content: Any) -> bytes:
-        return orjson.dumps(content)
+from typing import List
 
 
 app = FastAPI(default_response_class=ORJSONResponse)
@@ -28,11 +21,20 @@ def health_check():
     return {"status": "healthy"}
 
 
-@app.get("/entries/", response_model=List[Entry])
-def read_entries():
+@app.get("/entries/", response_model=EntriesResponse)
+def read_entries(
+    request: Request, page: int = 1, pageSize: int = Query(default=10, lte=100)
+):
+    offset = (page - 1) * pageSize
     with Session(engine) as session:
-        entries = session.exec(select(Entry)).first()
-        return [entries]
+        return {
+            "entries": session.exec(
+                select(Entry).offset(offset).limit(pageSize)
+            ).all(),
+            "nextPage": request.url.replace_query_params(
+                page=page + 1, pageSize=pageSize
+            )._url,
+        }
 
 
 @app.get("/entries/{entry_id}", response_model=Entry)

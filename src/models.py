@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import List, Optional
 
 from sqlmodel import Field, SQLModel
 
@@ -75,3 +75,6 @@ class Entry(SQLModel, table=True):
 
 class Ship(SQLModel):
     shipImo: str
+    shipName: str
+    shipType: str
+    entry_ids: List[int]
