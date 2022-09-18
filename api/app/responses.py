@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from fastapi import responses
 import orjson
-from typing import Any, List
+from typing import Any, List, Optional
 from src import Entry
 
 
@@ -13,5 +13,6 @@ class ORJSONResponse(responses.JSONResponse):
 
 
 class EntriesResponse(BaseModel):
-    nextPage: str
+    totalEntries: int
+    nextPage: Optional[str]
     entries: List[Entry]
