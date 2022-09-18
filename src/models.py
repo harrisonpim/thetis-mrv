@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import Optional
+import uuid
 
 from sqlmodel import Field, SQLModel
 
@@ -8,8 +9,13 @@ from sqlmodel import Field, SQLModel
 
 
 class Entry(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
-    shipImo: str
+    id: uuid.UUID = Field(
+        default_factory=uuid.uuid4,
+        primary_key=True,
+        index=True,
+        nullable=False,
+    )
+    shipImo: int = Field(index=True)
     shipName: str
     shipType: str
     reportingPeriod: int

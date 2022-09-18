@@ -4,6 +4,7 @@ from responses import ORJSONResponse, EntriesResponse
 from src import Entry, get_db_engine
 
 from sqlmodel import Session, select
+import uuid
 
 
 app = FastAPI(default_response_class=ORJSONResponse)
@@ -37,7 +38,7 @@ def read_entries(
 
 
 @app.get("/entries/{entry_id}", response_model=Entry)
-def read_entry(entry_id: int):
+def read_entry(entry_id: uuid.UUID):
     with Session(engine) as session:
         entry = session.get(Entry, entry_id)
         if not entry:
@@ -47,7 +48,7 @@ def read_entry(entry_id: int):
 
 @app.get("/ships/{shipImo}", response_model=EntriesResponse)
 def read_ships(
-    shipImo: str,
+    shipImo: int,
     request: Request,
     page: int = 1,
     pageSize: int = Query(default=10, lte=100),
