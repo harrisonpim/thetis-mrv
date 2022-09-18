@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, Optional
+from typing import Optional
 
 from sqlmodel import Field, SQLModel
 
@@ -71,10 +71,3 @@ class Entry(SQLModel, table=True):
     ladenCo2EmissionsPerTransportWorkFreight: Optional[float]
     voluntaryReportingAdditionalInformation: Optional[str]
     voluntaryReportingAverageDensityOfTheCargoTransported: Optional[float]
-
-
-class Ship(SQLModel):
-    shipImo: str
-    shipName: str
-    shipType: str
-    entry_ids: List[int]

@@ -1,10 +1,9 @@
 import os
 from fastapi import FastAPI, HTTPException, Query, Request
 from responses import ORJSONResponse, EntriesResponse
-from src import get_db_engine, Entry, Ship
+from src import Entry, get_db_engine
 
 from sqlmodel import Session, select
-from typing import List
 
 
 app = FastAPI(default_response_class=ORJSONResponse)
@@ -46,13 +45,23 @@ def read_entry(entry_id: int):
         return entry
 
 
-@app.get("/ships/", response_model=List[Ship])
-def read_ships():
+@app.get("/ships/{shipImo}", response_model=EntriesResponse)
+def read_ships(
+    shipImo: str,
+    request: Request,
+    page: int = 1,
+    pageSize: int = Query(default=10, lte=100),
+):
+    offset = (page - 1) * pageSize
     with Session(engine) as session:
-        return {}
-
-
-@app.get("/ships/{ship_id}", response_model=List[Ship])
-def read_ships():
-    with Session(engine) as session:
-        return {}
+        return {
+            "entries": session.exec(
+                select(Entry)
+                .where(Entry.shipImo == shipImo)
+                .offset(offset)
+                .limit(pageSize)
+            ).all(),
+            "nextPage": request.url.replace_query_params(
+                page=page + 1, pageSize=pageSize
+            )._url,
+        }
