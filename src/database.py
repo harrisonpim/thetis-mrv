@@ -1,9 +1,10 @@
-from .log import get_logger
-import psycopg2
-from sqlmodel import SQLModel, create_engine
-from sqlalchemy import exc
-
 from time import sleep
+
+import psycopg2
+from sqlalchemy import exc
+from sqlmodel import SQLModel, create_engine
+
+from .log import get_logger
 
 log = get_logger()
 
@@ -19,6 +20,7 @@ def get_db_engine(user: str, password: str, db_name: str):
         log.error("Waiting for database to start...")
         sleep(1)
         return get_db_engine(user, password, db_name)
+
 
 def clear_db():
     pass

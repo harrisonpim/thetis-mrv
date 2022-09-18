@@ -6,8 +6,10 @@ from src import get_db_engine, Entry, Ship
 from sqlmodel import Session, select
 from typing import List, Any
 
+
 class ORJSONResponse(responses.JSONResponse):
     media_type = "application/json"
+
     def render(self, content: Any) -> bytes:
         return orjson.dumps(content)
 

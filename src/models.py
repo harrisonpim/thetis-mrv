@@ -72,5 +72,6 @@ class Entry(SQLModel, table=True):
     voluntaryReportingAdditionalInformation: Optional[str]
     voluntaryReportingAverageDensityOfTheCargoTransported: Optional[float]
 
+
 class Ship(SQLModel):
     shipImo: str

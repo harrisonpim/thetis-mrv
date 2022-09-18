@@ -48,7 +48,9 @@ def row_to_entry(row: pd.Series) -> Entry:
     if "Annual Time spent at sea [hours]" in row:
         annualTotalTimeSpentAtSeaHours = row["Annual Time spent at sea [hours]"]
     elif "Annual Total time spent at sea [hours]" in row:
-        annualTotalTimeSpentAtSeaHours = row["Annual Total time spent at sea [hours]"]
+        annualTotalTimeSpentAtSeaHours = row[
+            "Annual Total time spent at sea [hours]"
+        ]
 
     totalTimeSpentAtSeaHours = None
     if "Time spent at sea [hours]" in row:
