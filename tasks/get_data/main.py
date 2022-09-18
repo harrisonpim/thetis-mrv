@@ -1,10 +1,9 @@
 import os
-from src.database import get_db_engine
-from src.models import Entry, row_to_entry
+from src import get_db_engine, Entry, row_to_entry, get_logger
 import pandas as pd
 import httpx
 from pathlib import Path
-from src.log import get_logger
+
 from sqlmodel import Session
 
 log = get_logger()
@@ -12,9 +11,9 @@ log = get_logger()
 data_url = "https://mrv.emsa.europa.eu/api/public-emission-report/reporting-period-document/binary/"
 
 data_dir = Path("/data/raw").absolute()
-data_dir.mkdir(parents=True, exist_ok=True)
-
 postgres_dir = Path("/data/postgres").absolute()
+
+data_dir.mkdir(parents=True, exist_ok=True)
 postgres_dir.mkdir(parents=True, exist_ok=True)
 
 year = 2018

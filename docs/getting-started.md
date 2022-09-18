@@ -16,6 +16,10 @@ To download all existing datasets, run
 docker compose up --build get-data
 ```
 
-They'll be saved in `.xlsx` format in the `/data/raw` directory.
+They'll be saved in `.xlsx` format in the `/data/raw` directory, and pushed into a local postgres database
 
+## API
 
+```sh
+docker compose up --build api
+```
