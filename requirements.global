@@ -3,3 +3,4 @@ pandas
 psycopg2-binary
 loguru==0.6.0
 scikit-learn==1.1.2
+orjson==3.8.0

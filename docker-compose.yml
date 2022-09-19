@@ -4,7 +4,7 @@ services:
   jupyter:
     depends_on:
       - postgres
-    build: 
+    build:
       dockerfile: jupyter/Dockerfile
       context: .
     ports:
@@ -27,7 +27,7 @@ services:
 
   format-python:
     image: python:3.8-slim
-    volumes: 
+    volumes:
       - type: bind
         source: ./
         target: /repo
@@ -81,7 +81,7 @@ services:
         target: /data
 
   train:
-    build: 
+    build:
       dockerfile: train/Dockerfile
       context: .
     env_file: .env
@@ -93,3 +93,20 @@ services:
         source: ./data
         target: /data
     command: python main.py
+
+  get-random-entry:
+    build:
+      dockerfile: train/Dockerfile
+      context: .
+    env_file: .env
+    volumes:
+      - type: bind
+        source: ./src
+        target: /scripts/src
+      - type: bind
+        source: ./scripts
+        target: /scripts
+      - type: bind
+        source: ./data
+        target: /data
+    command: python /scripts/get_random_entry.py
