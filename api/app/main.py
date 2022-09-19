@@ -11,8 +11,8 @@ from sqlalchemy import func
 
 data_dir = Path("/data/models").absolute()
 model_name = os.environ.get("MODEL_NAME", list(data_dir.iterdir())[-1])
-model = Model(path=data_dir/model_name/"model.pkl")
-encoder = Encoder(path=data_dir/model_name/"encoder.pkl")
+model = Model(path=data_dir / model_name / "model.pkl")
+encoder = Encoder(path=data_dir / model_name / "encoder.pkl")
 
 app = FastAPI(default_response_class=ORJSONResponse)
 

@@ -4,6 +4,7 @@ from typing import Optional
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 
+
 class Model:
     def __init__(
         self,

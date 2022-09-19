@@ -3,11 +3,7 @@ from datetime import datetime
 from pathlib import Path
 
 import numpy as np
-from sklearn.metrics import (
-    accuracy_score,
-    classification_report,
-    confusion_matrix,
-)
+from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 from sqlmodel import Session, select
 
@@ -29,32 +25,34 @@ model_dir.mkdir(parents=True, exist_ok=True)
 
 log.info("Fetching data from database")
 with Session(engine) as session:
-    entries = session.exec(select(
-        Entry.totalFuelConsumption,
-        Entry.onLadenFuelConsumption,
-        Entry.totalCo2Emissions,
-        Entry.betweenMSJurisdictionPortsCo2Emissions,
-        Entry.fromMSJurisdictionPortsCo2Emissions,
-        Entry.toMSJurisdictionPortsCo2Emissions,
-        Entry.atBerthMSJurisdictionPortsCo2Emissions,
-        Entry.passengerCo2Emissions,
-        Entry.freightCo2Emissions,
-        Entry.onLadenCo2Emissions,
-        Entry.annualTotalTimeSpentAtSeaHours,
-        Entry.fuelConsumptionPerDistance,
-        Entry.fuelConsumptionPerTransportWorkMass,
-        Entry.fuelConsumptionPerTransportWorkVolume,
-        Entry.fuelConsumptionPerTransportWorkDwt,
-        Entry.fuelConsumptionPerTransportWorkPax,
-        Entry.fuelConsumptionPerTransportWorkFreight,
-        Entry.Co2EmissionsPerDistance,
-        Entry.Co2EmissionsPerTransportWorkMass,
-        Entry.Co2EmissionsPerTransportWorkVolume,
-        Entry.Co2EmissionsPerTransportWorkDwt,
-        Entry.Co2EmissionsPerTransportWorkPax,
-        Entry.Co2EmissionsPerTransportWorkFreight,
-        Entry.shipType,
-    )).all()
+    entries = session.exec(
+        select(
+            Entry.totalFuelConsumption,
+            Entry.onLadenFuelConsumption,
+            Entry.totalCo2Emissions,
+            Entry.betweenMSJurisdictionPortsCo2Emissions,
+            Entry.fromMSJurisdictionPortsCo2Emissions,
+            Entry.toMSJurisdictionPortsCo2Emissions,
+            Entry.atBerthMSJurisdictionPortsCo2Emissions,
+            Entry.passengerCo2Emissions,
+            Entry.freightCo2Emissions,
+            Entry.onLadenCo2Emissions,
+            Entry.annualTotalTimeSpentAtSeaHours,
+            Entry.fuelConsumptionPerDistance,
+            Entry.fuelConsumptionPerTransportWorkMass,
+            Entry.fuelConsumptionPerTransportWorkVolume,
+            Entry.fuelConsumptionPerTransportWorkDwt,
+            Entry.fuelConsumptionPerTransportWorkPax,
+            Entry.fuelConsumptionPerTransportWorkFreight,
+            Entry.Co2EmissionsPerDistance,
+            Entry.Co2EmissionsPerTransportWorkMass,
+            Entry.Co2EmissionsPerTransportWorkVolume,
+            Entry.Co2EmissionsPerTransportWorkDwt,
+            Entry.Co2EmissionsPerTransportWorkPax,
+            Entry.Co2EmissionsPerTransportWorkFreight,
+            Entry.shipType,
+        )
+    ).all()
 log.info(f"Fetched {len(entries)} entries")
 
 
