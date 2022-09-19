@@ -4,7 +4,7 @@ import psycopg2
 from sqlalchemy import exc
 from sqlmodel import SQLModel, create_engine
 
-from .log import get_logger
+from .. import get_logger
 
 log = get_logger()
 

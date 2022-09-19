@@ -76,3 +76,17 @@ services:
       - type: bind
         source: ./src
         target: /app/src
+
+  train:
+    build: 
+      dockerfile: train/Dockerfile
+      context: .
+    env_file: .env
+    volumes:
+      - type: bind
+        source: ./src
+        target: /src
+      - type: bind
+        source: ./data
+        target: /data
+    command: python main.py
