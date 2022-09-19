@@ -1,11 +1,18 @@
+from pathlib import Path
 from fastapi import FastAPI, HTTPException, Query, Request, Depends
 from responses import ORJSONResponse, EntriesResponse
-from src import Entry, get_db_engine
+from src import Entry, get_db_engine, Model, Encoder
 
 from sqlmodel import Session, select
 import uuid
 import os
 from sqlalchemy import func
+
+
+data_dir = Path("/data/models").absolute()
+model_name = os.environ.get("MODEL_NAME", list(data_dir.iterdir())[-1])
+model = Model(path=data_dir/model_name/"model.pkl")
+encoder = Encoder(path=data_dir/model_name/"encoder.pkl")
 
 app = FastAPI(default_response_class=ORJSONResponse)
 
@@ -78,3 +85,16 @@ def read_ships(
             page=page + 1, pageSize=pageSize
         )._url
     return response
+
+
+@app.get("/encode")
+async def _encode(entry: Entry):
+    encoded = encoder.transform([entry])
+    return encoded.tolist()
+
+
+@app.get("/predict")
+async def _predict(entry: Entry):
+    encoded = encoder.transform([entry])
+    result = model.predict(encoded)
+    return result.tolist()

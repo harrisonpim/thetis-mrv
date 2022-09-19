@@ -77,29 +77,25 @@ X_validation, X_test, y_validation, y_test = train_test_split(
 )
 
 log.info("Saving datasets")
-np.save(X_train, model_dir / "data" / "X_train")
-np.save(X_test, model_dir / "data" / "X_test")
-np.save(X_validation, model_dir / "data" / "X_validation")
-np.save(y_train, model_dir / "data" / "y_train")
-np.save(y_test, model_dir / "data" / "y_test")
-np.save(y_validation, model_dir / "data" / "y_validation")
+np.save(model_dir / "X_train", X_train)
+np.save(model_dir / "X_test", X_test)
+np.save(model_dir / "X_validation", X_validation)
+np.save(model_dir / "y_train", y_train)
+np.save(model_dir / "y_test", y_test)
+np.save(model_dir / "y_validation", y_validation)
 
 
 log.info("Training model")
-model = Model(input_size=X_train.shape[1])
-model.train(X_train, y_train, X_validation, y_validation)
+model = Model()
+model.train(X_train, y_train)
 model_path = model_dir / "model.pkl"
 model.save(model_path)
 log.info(f"Model saved to: {model_path}")
 
 log.info("Predicting on test set")
 y_pred = model.predict(X_test)
+log.info(f"{y_test.shape}, {y_pred.shape}")
+log.info(f"{y_pred[0]}")
 
 log.info("Evaluating model")
 log.info(f"Accuracy: {accuracy_score(y_test, y_pred)}")
-log.info("Confusion_matrix:")
-for line in confusion_matrix(y_test, y_pred).tolist():
-    log.info(line)
-log.info("Classification report:")
-for line in classification_report(y_test, y_pred).split("\n"):
-    log.info(line)

@@ -1,3 +1,4 @@
+import numpy as np
 import os
 from pathlib import Path
 
@@ -44,6 +45,12 @@ session = Session(engine)
 for file in data_dir.iterdir():
     log.info(f"Reading data from {file}")
     df = pd.read_excel(file, header=2)
+    df = (
+        df
+        .replace('', np.nan)
+        .replace('N/A', np.nan)
+        .replace('Division by zero!', np.nan)
+    )
     for i in range(len(df)):
         try:
             data = df.loc[i]

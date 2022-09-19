@@ -1,22 +1,29 @@
 import pickle
+from textwrap import fill
 from typing import List, Optional
 
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder, MinMaxScaler
+
+from sklearn.impute import SimpleImputer
 
 from .. import Entry
 
 class ContinuousEncoder:
     def __init__(self):
         self.scaler = MinMaxScaler()
+        self.imputer = SimpleImputer(
+            missing_values=np.nan, strategy='constant', fill_value=0
+        )
 
     def fit(self, data):
         self.scaler.fit(data)
+        self.imputer.fit(data)
         return self
 
     def transform(self, data):
         is_none = np.isnan(data.astype(float)).astype(int)
-        scaled = self.scaler.transform(data)
+        scaled = self.scaler.transform(self.imputer.transform(data))
         return np.stack([scaled, is_none], axis=1).reshape(-1, 2)
 
     def fit_transform(self, data):
@@ -131,7 +138,7 @@ class Encoder:
     def transform(self, entries: List[Entry]):
         encoded_y = self.shipType_OHE.transform(
             np.array([entry.shipType for entry in entries]).reshape(-1, 1)
-        )
+        ).toarray()
         encoded_totalFuelConsumption = self.totalFuelConsumption_encoder.transform(
             np.array([entry.totalFuelConsumption for entry in entries]).reshape(-1, 1)
         )
@@ -228,7 +235,7 @@ class Encoder:
                 encoded_Co2EmissionsPerTransportWorkFreight,
             ],
             axis=1,
-        ).flatten()
+        ).reshape(len(entries), -1)
         return encoded_X, encoded_y
 
     def fit_transform(self, entries: List[Entry]):

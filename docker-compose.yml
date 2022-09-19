@@ -76,6 +76,9 @@ services:
       - type: bind
         source: ./src
         target: /app/src
+      - type: bind
+        source: ./data
+        target: /data
 
   train:
     build: 
