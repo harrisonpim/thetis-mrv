@@ -32,13 +32,13 @@ services:
         source: ./
         target: /repo
     working_dir: /repo
-    command: sh tasks/format.sh
+    command: sh scripts/format.sh
 
-  get-data:
+  pipeline:
     depends_on:
       - postgres
     build:
-      dockerfile: tasks/get_data/Dockerfile
+      dockerfile: pipeline/Dockerfile
       context: .
     env_file: .env
     volumes:
@@ -46,12 +46,12 @@ services:
         source: ./data
         target: /data
       - type: bind
-        source: ./tasks
-        target: /tasks
+        source: ./pipeline
+        target: /pipeline
       - type: bind
         source: ./src
-        target: /tasks/get_data/src
-    command: python /tasks/get_data/main.py
+        target: /pipeline/src
+    command: python /pipeline/main.py
 
   postgres:
     image: postgres
